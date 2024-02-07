@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snake Game</title>
+    <style>
+        body {
+            background-color: #222;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            border: 1px solid #ccc;
+        }
+
+        #snake {
+            position: absolute;
+            background-color: #0f0;
+        }
+
+        #food {
+            position: absolute;
+            background-color: #f00;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="snake"></div>
+        <div id="food"></div>
+    </div>
+    <script>
+        const container = document.querySelector('.container');
+        const snake = document.getElementById('snake');
+        const food = document.getElementById('food');
+
+        let snakeX = 150;
+        let snakeY = 150;
+        let foodX;
+        let foodY;
+        let dx = 0;
+        let dy = 0;
+        let snakeTrail = [];
+        let tail = 5;
+
+        function createFood() {
+            foodX = Math.floor(Math.random() * 30) * 10;
+            foodY = Math.floor(Math.random() * 30) * 10;
+            food.style.left = foodX + 'px';
+            food.style.top = foodY + 'px';
+        }
+
+        function moveSnake() {
+            snakeX += dx;
+            snakeY += dy;
+            if (snakeX >= 300 || snakeX < 0 || snakeY >= 300 || snakeY < 0) {
+                gameOver();
+            }
+            snake.style.left = snakeX + 'px';
+            snake.style.top = snakeY + 'px';
+
+            for (let i = 0; i < snakeTrail.length; i++) {
+                if (snakeX === snakeTrail[i].x && snakeY === snakeTrail[i].y) {
+                    gameOver();
+                }
+            }
+
+            snakeTrail.push({ x: snakeX, y: snakeY });
+            while (snakeTrail.length > tail) {
+                snakeTrail.shift();
+            }
+
+            if (snakeX === foodX && snakeY === foodY) {
+                tail++;
+                createFood();
+            }
+        }
+
+        function gameOver() {
+            alert('Game Over!');
+            snakeX = 150;
+            snakeY = 150;
+            dx = 0;
+            dy = 0;
+            tail = 5;
+            snakeTrail = [];
+            snake.style.left = snakeX + 'px';
+            snake.style.top = snakeY + 'px';
+        }
+
+        document.addEventListener('keydown', (e) => {
+            switch (e.key) {
+                case 'ArrowLeft':
+                    dx = -10;
+                    dy = 0;
+                    break;
+                case 'ArrowRight':
+                    dx = 10;
+                    dy = 0;
+                    break;
+                case 'ArrowUp':
+                    dx = 0;
+                    dy = -10;
+                    break;
+                case 'ArrowDown':
+                    dx = 0;
+                    dy = 10;
+                    break;
+            }
+        });
+
+        createFood();
+        setInterval(moveSnake, 100);
+    </script>
+</body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="div"></div>
+    
+    <script>
+// Get all elements with the class name "box"
+let boxElements = document.getElementsByClassName("box");
+
+// Initialize a variable to store the total width
+let totalWidth = 0;
+
+// Loop through each "box" element and add its width to the total
+for (let i = 0; i < boxElements.length; i++) {
+    // Add the width of each box element to the total
+    totalWidth += boxElements[i].offsetWidth;
+}
+
+// Now you have the total width of all "box" elements stored in the totalWidth variable
+console.log("Total width of boxes:", totalWidth);
+
+
+
+
+
+
+
+
+        // Get the div element by its ID or any other means
+var divElement = document.getElementById("div");
+
+// Get the width of the div
+var divWidth = divElement.offsetWidth;
+
+// Now you have the width of the div stored in the divWidth variable
+console.log("Width of the div:", divWidth);
+
+    </script>
+</body>
+</html>

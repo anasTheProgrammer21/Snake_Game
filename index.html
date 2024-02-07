@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Snake Game</title>
+		<!-- <link rel="stylesheet" href="style.css"> -->
+		<style>
+			    * {
+			    margin: 0;
+			    padding: 0;
+			    border: 0;
+			    font-family: Arial, Helvetica, sans-serif;
+			    overflow: hidden;
+
+			    color: red;
+			}
+
+			body {
+			    width: 100vw;
+			    height: 100vh;
+			    background-color: rgb(49, 20, 79);
+			}
+
+			header {
+			    display: flex;
+			    justify-content: center;
+			    align-items: center;
+			}
+
+			.heading {
+			    color: red;
+			    text-align: center;
+			    margin-top: 10px;
+			    width: 70vw;
+			}
+
+			header .score {
+			    margin-top: 10px;
+			    width: 30vw;
+			    text-align: center;
+			}
+
+			.snake {
+			    /* display: flex; */
+			    border: 5px solid red;
+			    width: 99vw;
+			    height: 90vh;
+			    /* position: relative; */
+			    /* position: fixed; */
+			}
+
+			.snake .container {
+			    width: 100vw;
+			    height: 100vh;
+			}
+
+			main {
+			    width: 10px;
+			    height: 10px;
+			    border-radius: 50%;
+			    background-color: brown;
+				z-index: 21;
+			}
+
+			.main {
+                width: auto;
+                height: auto;
+			    display: flex;
+			    flex-direction: row;
+			    z-index: 20;
+			}
+
+			.main .box {
+				z-index: 21;
+			    width: 10px;
+			    height: 10px;
+			    border-radius: 4px;
+			    background-color: rgb(11, 10, 10);
+			}
+			.pop {
+			    width: 20px;
+			    height: 20px;
+			    border-radius: 50%;
+			    background-color: rgb(26, 255, 0);
+			    margin-top: 0px;
+			    position: absolute;
+			}
+
+			button {
+				padding: 10px;
+			}
+		</style>
+	</head>
+	<body onclick="start()">
+		<header>
+			<h2 class="heading">Welcome to the <i>Snake Game</i></h2>
+			<h2 class="score">Scores: <i class="scores">0</i></h2>
+		</header>
+		<div class="pop" id="div1"></div>
+		<div class="snake">
+			<!-- <div class="box"></div> -->
+			<div class="container">
+				<div class="main">
+					<main id="div2"></main>
+				</div>
+			</div>
+		</div>
+		<!-- <center><button onclick="start()">Start</button></center> -->
+		
+		<script>
+			let numbers = [1,5,10,15,20,25,30,35,40,45,50,55,60,65,70,75]
+			let next_number;
+			
+			let pop = document.querySelector('.pop');
+			let snake = document.querySelector(".main");
+			    let score = document.querySelector(".scores");
+			    let scores = 0;
+			    let marginLeft = 1;
+			    let marginRight = 1;
+			    let marginTop = 1;
+			    let marginBottom = 1;
+			    let direction = "Right";
+			    let right = true;
+			    let left = true;
+			    let up = false;
+			    let down = false;
+			    let generation_permission = true;
+				let grant = true;
+
+				function checking_sizes() {
+					// Get all elements with the class name "box"
+let boxElements = document.getElementsByClassName("box");
+
+// Initialize a variable to store the total width
+let totalWidth = 0;
+
+// Loop through each "box" element and add its width to the total
+for (let i = 0; i < boxElements.length; i++) {
+    // Add the width of each box element to the total
+    totalWidth += boxElements[i].offsetWidth;
+}
+
+// Now you have the total width of all "box" elements stored in the totalWidth variable
+console.log("Total width of boxes:", totalWidth);
+totalWidth += 10;
+snake.style.width = `${totalWidth}px`
+				}
+				// checking_sizes();
+
+			    function bubble_start() {
+			        if (generation_permission === true) {
+			            next_number = numbers[(Math.floor(Math.random() * numbers.length))];
+			            let bubble_left = next_number;
+			            next_number = numbers[(Math.floor(Math.random() * numbers.length))];
+			            let bubble_top = next_number;
+
+			            pop.style.marginLeft = `${bubble_left}vw`
+			            pop.style.marginTop = `${bubble_top}vh`
+			            generation_permission = false;
+			        }
+			    }
+			    bubble_start();
+
+			    function increase() {
+			        touching();
+			        if (right === true) {
+						grant = true;
+			            marginLeft += 0.1;
+			            score.innerHTML = `${scores}`
+			            if (marginLeft <= 100) {
+			                snake.style.marginLeft = `${marginLeft}vw`;
+			                snake.style.flexDirection = "row";
+			            }
+			            else {
+			                snake.style.marginLeft = "0px";
+			                marginRight = 0;
+			                snake.style.marginRight = `${marginRight}vw`;
+			                marginLeft = 0;
+			            }
+			        }
+			        else if (left === true) {
+			            marginLeft -= 0.1;
+			            score.innerHTML = `${scores}`
+			            if (marginLeft <= 1) {
+			                marginLeft = 100;
+			            }
+			            if (marginLeft <= 1 || marginLeft <= 100) {
+							if (grant === true) {
+								// totop();
+								grant = false;
+							}
+			                snake.style.marginLeft = `${marginLeft}vw`;
+			                snake.style.flexDirection = "row-reverse";
+			            }
+			            else {
+			                snake.style.marginLeft = "0px";
+			                marginLeft = 0;
+			            }
+			        }
+			        else if (down === true) {
+						grant = true;
+			            marginTop += 0.1;
+			            score.innerHTML = `${scores}`
+			            if (marginTop <= 1 || marginTop <= 100) {
+			                snake.style.marginTop = `${marginTop}vh`;
+			                snake.style.flexDirection = "column";
+			            }
+			            else {
+			                snake.style.marginTop = "0px";
+			                marginTop = 0;
+			            }
+			        }
+			        else if (up === true) {
+						grant = true;
+			            marginTop -= 0.1;
+			            score.innerHTML = `${scores}`
+			            if (marginTop <= 1) {
+							marginTop = 100;
+			            }
+			            if (marginTop <= 1 || marginTop <= 100) {
+							snake.style.marginTop = `${marginTop}vh`;
+			                snake.style.flexDirection = "column-reverse";
+			            }
+			            else {
+			                snake.style.marginTop = "0px";
+			                marginTop = 0;
+			            }
+			        }
+			    }
+
+				function totop() {
+					let old = snake.innerHTML;
+					// let reversedText = old.split(/(\t*<!--.*?-->|<main[^>]*><\/main>)/g).reverse().join('');
+					let reversedText = old.split(/(\t*<!--.*?-->|<main[^>]*><\/main>)/g).reverse().join('');
+					snake.innerHTML = reversedText;
+					console.log(reversedText);
+				}
+				// totop();
+
+			    function touching() {
+			        let div1 = document.getElementById('div1').getBoundingClientRect();
+			let div2 = document.getElementById('div2').getBoundingClientRect();
+			let old = snake.innerHTML;
+			
+
+			// Check for overlap
+			if (
+			    div1.top < div2.bottom &&
+			    div1.bottom > div2.top &&
+			    div1.left < div2.right &&
+			    div1.right > div2.left
+			    ) {
+			        // console.log("divs are touching!"); // Divs are touching or overlapping
+			        snake.innerHTML = `<div class="box"></div>${old}`;
+			    handel_scores();
+			    generation_permission = true;
+			    bubble_start();
+				checking_sizes();
+			} else {
+			    // console.log("Divs are not touching"); // Divs are not touching
+			}
+			    }
+
+			    function handel_scores() {
+			        scores += 1;
+			    }
+
+			    document.addEventListener('keydown', () => {
+					checking_sizes();
+			           let current_key = event.key
+			                    // console.log(current_key);
+			                    if (current_key === "ArrowDown") {
+			                        right = false;
+			                        left = false;
+			                        up = false;
+			                        down = true;
+			                        console.log(`${current_key} Pressed`)
+			                    }
+			                    else if (current_key === "ArrowUp") {
+			                        right = false;
+			                        left = false;
+			                        up = true;
+			                        down = false;
+			                        console.log(`${current_key} Pressed`)
+			                    }
+			                    else if (current_key === "ArrowLeft") {
+			                        right = false;
+			                        left = true;
+			                        up = false;
+			                        down = false;
+			                        console.log(`${current_key} Pressed`)
+			                    }
+			                    else if (current_key === "ArrowRight") {
+			                        right = true;
+			                        left = false;
+			                        up = false;
+			                        down = false;
+			                        console.log(`${current_key} Pressed`)
+			                    }
+			           // checking_for_matched();
+			       });
+				   function start() {
+
+					   setInterval(increase, 10);
+				   }
+					
+		</script>
+	</body>
+</html>
